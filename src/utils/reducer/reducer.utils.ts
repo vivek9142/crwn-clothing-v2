@@ -74,8 +74,12 @@ So function overloading actually comes from TypeScript, not JavaScript.
 Function overload provides us this ability to make multiple function type definitions 
 of the same name,so we can have multiple type definitions for create action.
 And what it allows us to do is allow this function to receive different parameter types.
-*/
 
+we need to place this base func in last line.
+*/
+// export function createAction<T extends string, P>(type: T, payload:P){
+//     return {type,payload}
+// }
 /*
 In order for us to do it, we actually need to use the classic function declaration
 style rather than the arrow functions.
@@ -86,9 +90,6 @@ remember, from our action type. Right here.
 These are these fixed values in our enum, so we need to pass that as the T value.
 But we know this is a string, so we're going to say that this create action extends string.
 */
-export function createAction<T extends string, P>(type: T, payload:P){
-    return {type,payload}
-}
 
 /*
 So now we need to do the overloading.
@@ -138,3 +139,7 @@ on our function.
 export function createAction<T extends string>(type:T,payload:void):Action<T>;
 
 // export const createAction = (type, payload) => ({ type, payload });
+
+export function createAction<T extends string, P>(type: T, payload:P){
+    return {type,payload}
+}
