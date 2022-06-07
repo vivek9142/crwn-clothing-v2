@@ -1,49 +1,58 @@
-import { CATEGORIES_ACTION_TYPES } from './category.types';
+import { CATEGORIES_ACTION_TYPES ,Category} from './category.types';
 
-/*
-we are going to import in.Category action.From our category action for.
-*/
 import { CategoryAction } from './category.action';
 
-export const CATEGORIES_INITIAL_STATE = {
+/*Now, what we need to do is also we need to type this initial state.
+To this object where we know this is read only because we cannot ever modify these values.
+So read only is a additional property you can add so that you force it, that this state 
+object can never be modified.
+*/
+export type CategoriesState = {
+  readonly categories: Category[];
+  readonly isLoading: boolean;
+  readonly error: Error | null;
+}
+
+export const CATEGORIES_INITIAL_STATE:CategoriesState = {
   categories: [],
   isLoading: false,
   error: null,
 };
-/*
-And what we need to do now is we need to figure out how to utilize this category action
-and pass it as the action type here.
-This is where you're actually going to use that AS a keyword.
-So here are saying, hey, this action that you receive is only going to be one of these
-three action types.
 
-Now, this pattern is called a discriminating union.
-Essentially, this union type that we've created for category action is 
-discriminatory because it says that I only want to accept actions of these three types.
-This reducer only responds to those actions.
-
-If you try and call any other type inside of this definition, 
-I'm going to throw you an error because I know this action should only be one of
-these three types.
-
-This is actually a very common pattern you'll see inside of TypeScript enabled Redux
-projects, but this alone is slightly problematic and we will discuss that after 
-we've typed out the rest of this reducer.
-*/
 export const categoriesReducer = (
   state = CATEGORIES_INITIAL_STATE,
   // action = {}
   action = {} as CategoryAction
 ) => {
-  const { type, payload } = action;
+  /*
+  Property 'payload' does not exist on type 'CategoryAction'.
 
-  switch (type) {
+  even though we are passing in a payload right here that points to avoid this
+  action, does not have a payload value.
+  So as a result, you cannot de structure something that does not exist.
+  So even though on some of our action types inside of category action, they are actions
+  with payloads.But the moment you have one that does not have that property, 
+  this will not work.And this is fine.
+  We can just get rid of this call right here where we de-structure.
+  */
+  // const { type, payload } = action;
+
+  /*
+  typescript is smart enough to know that if your case hits this fetch category start,
+  then what you're going to get here in the action is a regular action.
+  Similarly, if you're inside and you pass this fetch category success, 
+  then this action type must be of fetch category success, and therefore 
+  the payload must be the correct payload.
+
+  So that's one of those benefits that we get by creating this union type.
+  */
+  switch (action.type) {
     case CATEGORIES_ACTION_TYPES.FETCH_CATEGORIES_START:
       return { ...state, isLoading: true };
     case CATEGORIES_ACTION_TYPES.FETCH_CATEGORIES_SUCCESS:
-      return { ...state, categories: payload, isLoading: false };
+      return { ...state, categories: action.payload, isLoading: false };
     case CATEGORIES_ACTION_TYPES.FETCH_CATEGORIES_FAILED:
-      return { ...state, error: payload, isLoading: false };
+      return { ...state, error: action.payload, isLoading: false };
     default:
       return state;
   }
