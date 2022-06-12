@@ -12,19 +12,3 @@ export enum USER_ACTION_TYPES {
   SIGN_OUT_SUCCESS = 'user/SIGN_OUT_SUCCESS',
   SIGN_OUT_FAILED = 'user/SIGN_OUT_FAILED',
 };
-
-/*
-The thing that we've done before was that every time we were storing some kind of 
-data structure inside of our state, particularly if we're current user, 
-we would put the user type or the object type,
-
-the data type inside of our user types file or the corresponding types file.
-In this particular case, our user data actually lives inside of our Firebase Utils.
-If you remember earlier, we had defined this user data property.
-So here what we can do is we can either keep it related to Firebase or move it 
-to user types.
-Personally, I'd rather keep it in the user data inside of Firebase because this 
-data actually matches the data inside of Firebase that we get back.
-So to me, it's more correspondent that it's related to Firebase than 
-it is related to some type thatwe have defined specifically for Redux.
-*/
